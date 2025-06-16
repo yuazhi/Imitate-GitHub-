@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>个人网站模板</title>
+    
+    <!-- Open Graph / QQ 分享标签 -->
+    <meta property="og:title" content="个人网站模板" />
+    <meta property="og:description" content="一个基于纯前端技术构建的个人网站模板" />
+    <meta property="og:image" content="" /> <!-- 替换为你的网站预览图 -->
+    <meta property="og:url" content="" /> <!-- 替换为你的网站URL -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="个人网站模板" />
+    
+    <!-- QQ 特定标签 -->
+    <meta itemprop="name" content="个人网站模板" />
+    <meta itemprop="description" content="一个基于纯前端技术构建的个人网站模板" />
+    <meta itemprop="image" content="" /> <!-- 替换为你的网站预览图 -->
+    
+    <link rel="stylesheet" href="/github.min.css">
+    <link rel="stylesheet" href="/github-dark.min.css">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+    <script src="/highlight.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css.css">
+</head>
+<body>
+    <div class="container">
+        <div class="profile-section">
+            <div class="profile-card">
+                <div class="profile-header">
+                    <img src="https://github.com/identicons/your-username.png" alt="个人照片" class="profile-img">
+                    <div class="profile-info">
+                        <h1 class="profile-name">你的名字</h1>
+                        <div class="profile-login">@你的用户名</div>
+                    </div>
+                </div>
+                
+                <p>你的个人简介</p>
+                
+                <div class="social-links">
+                    <a href="#" class="social-link" target="_blank">
+                        <svg t="1736847791705" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="2554" width="200" height="200"><path d="M752 176c17.673 0 32 14.327 32 32v608c0 17.673-14.327 32-32 32H272c-17.673 0-32-14.327-32-32V208c0-17.673 14.327-32 32-32h480z m-480-48c-44.183 0-80 35.817-80 80v608c0 44.183 35.817 80 80 80h480c44.183 0 80-35.817 80-80V208c0-44.183-35.817-80-80-80H272z" p-id="2555"></path><path d="M320 712c0-13.255 10.745-24 24-24h336c13.255 0 24 10.745 24 24s-10.745 24-24 24H344c-13.255 0-24-10.745-24-24zM320 584c0-13.255 10.745-24 24-24h336c13.255 0 24 10.745 24 24s-10.745 24-24 24H344c-13.255 0-24-10.745-24-24zM576 312c0-13.255 10.745-24 24-24h80c13.255 0 24 10.745 24 24s-10.745 24-24 24h-80c-13.255 0-24-10.745-24-24zM576 456c0-13.255 10.745-24 24-24h80c13.255 0 24 10.745 24 24s-10.745 24-24 24h-80c-13.255 0-24-10.745-24-24zM344 288h144c13.255 0 24 10.745 24 24v144c0 13.255-10.745 24-24 24H344c-13.255 0-24-10.745-24-24V312c0-13.255 10.745-24 24-24z m24 144h96v-96h-96v96z" p-id="2556"></path></svg>
+                        <span>更新日志</span>
+                    </a>
+                    <a href="#" class="social-link" onclick="showWechat(event)">
+                        <svg t="1736847807869" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="3632" width="200" height="200"><path d="M664.250054 368.541681c10.015098 0 19.892049 0.732687 29.67281 1.795902-26.647917-122.810047-159.358451-214.077703-310.826188-214.077703-169.353083 0-308.085774 114.232694-308.085774 259.274068 0 83.708494 46.165436 152.460344 123.281791 205.78483l-30.80868 91.730191 107.688651-53.455469c38.558178 7.53665 69.459978 15.308661 107.924012 15.308661 9.66308 0 19.230993-0.470721 28.752858-1.225921-6.025227-20.36584-9.521864-41.723264-9.521864-63.862493C402.328693 476.632491 517.908058 368.541681 664.250054 368.541681zM498.62897 285.87389c23.200398 0 38.557154 15.120372 38.557154 38.061874 0 22.846334-15.356756 38.156018-38.557154 38.156018-23.107277 0-46.260603-15.309684-46.260603-38.156018C452.368366 300.994262 475.522716 285.87389 498.62897 285.87389zM283.016307 362.090758c-23.107277 0-46.402843-15.309684-46.402843-38.156018 0-22.941502 23.295566-38.061874 46.402843-38.061874 23.081695 0 38.46301 15.120372 38.46301 38.061874C321.479317 346.782098 306.098002 362.090758 283.016307 362.090758zM945.448458 606.151333c0-121.888048-123.258255-221.236753-261.683954-221.236753-146.57838 0-262.015505 99.348706-262.015505 221.236753 0 122.06508 115.437126 221.200938 262.015505 221.200938 30.66644 0 61.617359-7.609305 92.423993-15.262612l84.513836 45.786813-23.178909-76.17082C899.379213 735.776599 945.448458 674.90216 945.448458 606.151333zM598.803483 567.994292c-15.332197 0-30.807656-15.096836-30.807656-30.501688 0-15.190981 15.47546-30.477129 30.807656-30.477129 23.295566 0 38.558178 15.286148 38.558178 30.477129C637.361661 552.897456 622.099049 567.994292 598.803483 567.994292zM768.25071 567.994292c-15.213493 0-30.594809-15.096836-30.594809-30.501688 0-15.190981 15.381315-30.477129 30.594809-30.477129 23.107277 0 38.558178 15.286148 38.558178 30.477129C806.808888 552.897456 791.357987 567.994292 768.25071 567.994292z" p-id="3633"></path></svg>
+                        <span>微信</span>
+                    </a>
+                    <a href="#" class="social-link" onclick="showQQ(event)">
+                        <svg t="1736847742177" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1534" id="mx_n_1736847742178" width="200" height="200"><path d="M824.8 613.2c-16-51.4-34.4-94.6-62.7-165.3C766.5 262.2 689.3 112 511.5 112 331.7 112 256.2 265.2 261 447.9c-28.4 70.8-46.7 113.7-62.7 165.3-34 109.5-23 154.8-14.6 155.8 18 2.2 70.1-82.4 70.1-82.4 0 49 25.2 112.9 79.8 159-26.4 8.1-85.7 29.9-71.6 53.8 11.4 19.3 196.2 12.3 249.5 6.3 53.3 6 238.1 13 249.5-6.3 14.1-23.8-45.3-45.7-71.6-53.8 54.6-46.2 79.8-110.1 79.8-159 0 0 52.1 84.6 70.1 82.4 8.5-1.1 19.5-46.4-14.5-155.8z" p-id="1535"></path></svg>
+                        <span>QQ</span>
+                    </a>
+                    <a href="mailto:your.email@example.com" class="social-link">
+                        <svg height="16" viewBox="0 0 16 16" width="16">
+                            <path d="M1.75 2h12.5c.966 0 1.75.784 1.75 1.75v8.5A1.75 1.75 0 0 1 14.25 14H1.75A1.75 1.75 0 0 1 0 12.25v-8.5C0 2.784.784 2 1.75 2ZM1.5 12.251c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V5.809L8.38 9.397a.75.75 0 0 1-.76 0L1.5 5.809v6.442Zm13-8.181v-.32a.25.25 0 0 0-.25-.25H1.75a.25.25 0 0 0-.25.25v.32L8 7.88Z"></path>
+                        </svg>
+                        <span>邮箱</span>
+                    </a>
+                </div>
+            </div>
+
+            <div class="content">
+                <div class="tab-container">
+                    <a href="#" class="tab active" data-tab="overview">概览</a>
+                    <a href="#" class="tab" data-tab="projects">项目</a>
+                    <a href="#" class="tab" data-tab="articles">文章</a>
+                    <a href="#" class="tab" data-tab="memos">说说</a>
+                    <a href="#" class="tab" data-tab="friends">友链</a>
+                    <a href="#" class="tab" data-tab="stars">Stars</a>
+                </div>
+
+                <div class="content-area">
+                    <!-- 内容将通过 JavaScript 动态加载 -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="copyright">
+                    © 2024 个人网站模板. All rights reserved.
+                </div>
+                
+                <!-- 如果需要备案信息，请替换以下内容 -->
+                <div class="beian">
+                    <a href="https://beian.miit.gov.cn/" target="_blank">
+                        <img src="" alt="备案图标"> <!-- 替换为你的备案图标 -->
+                        你的备案号
+                    </a>
+                </div>
+                
+                <!-- 如果需要状态监控，请替换以下内容 -->
+                <a href="#" target="_blank">
+                    <img src="" alt="状态徽章"> <!-- 替换为你的状态监控徽章 -->
+                </a>
+            </div>
+        </div>
+    </footer>
+    
+    <script src="/marked.min.js"></script>
+    <script src="/main.js"></script>
+    <script src="https://cdn.motsuni.cn/view-image.min.js"></script>
+</body>
+</html> 
