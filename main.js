@@ -1,19 +1,58 @@
-// 配置说明：
-// 1. 请将以下配置替换为你自己的信息
-// 2. 所有API密钥和Token都应该通过环境变量或配置文件管理，不要直接硬编码在代码中
+// 模拟项目数据，实际使用时可以替换为真实的API请求
+// 添加 normalizeLangName 函数定义
+function normalizeLangName(name) {
+    if (!name) return 'default';
+    return name.toLowerCase()
+        .replace(/\+/g, 'p')
+        .replace(/#/g, 'sharp')
+        .replace(/\./g, 'dot')
+        .replace(/-/g, '')
+        .replace(/\s+/g, '');
+}
+
+// 示例项目数据 - 请替换为您的实际项目数据
+const projectsData = [
+    {
+        name: "example-project",
+        description: "这是一个示例项目",
+        tags: ["JavaScript", "HTML", "CSS"],
+        stars: 10,
+        forks: 5
+    },
+    {
+        name: "another-project",
+        description: "另一个示例项目",
+        tags: ["Vue", "Node.js"],
+        stars: 25,
+        forks: 8
+    }
+];
+
+// 在 projectsData 数组前添加正在进行的项目数据
+const ongoingProject = {
+    name: "current-project",
+    description: "这是一个正在开发中的重要项目。",
+    tags: ["React", "TypeScript"],
+    progress: 65, // 进度百分比
+    stars: 15,
+    forks: 3
+};
+
+// ==================== 配置区域 ====================
+// 请根据您的实际情况修改以下配置
 
 // GitHub API配置
-const GITHUB_USERNAME = ''; // 替换为你的GitHub用户名
+const GITHUB_USERNAME = 'your-github-username'; // 替换为您的GitHub用户名
 const GITHUB_API_BASE = 'https://api.github.com';
-const GITHUB_TOKEN = ''; // 替换为你的GitHub Token
+const GITHUB_TOKEN = ''; // 替换为您的GitHub Token（可选，用于提高API限制）
 
-// Memos API配置
-const MEMOS_API_BASE = ''; // 替换为你的Memos API地址
-const MEMOS_TOKEN = ''; // 替换为你的Memos Token
+// Memos API配置（可选）
+const MEMOS_API_BASE = ''; // 替换为您的Memos API地址
+const MEMOS_TOKEN = ''; // 替换为您的Memos Token
 
-// 文章 API 配置
+// 文章 API 配置（可选）
 const ARTICLES_API_CONFIG = {
-    URL: "", // 替换为你的文章API地址
+    URL: "", // 替换为您的文章API地址
     Method: "post",
     Headers: {
         "Accept": "application/json, text/plain, */*",
@@ -30,62 +69,23 @@ const ARTICLES_API_CONFIG = {
     Status: 200
 };
 
-// 示例项目数据，实际使用时可以替换为真实的API请求
-const projectsData = [
-    {
-        name: "示例项目1",
-        description: "这是一个示例项目描述",
-        tags: ["JavaScript", "HTML", "CSS"],
-        stars: 0,
-        forks: 0
-    },
-    {
-        name: "示例项目2",
-        description: "这是另一个示例项目描述",
-        tags: ["Vue", "Node.js"],
-        stars: 0,
-        forks: 0
-    }
-];
-
-// 示例正在进行的项目数据
-const ongoingProject = {
-    name: "示例进行中项目",
-    description: "这是一个正在开发中的示例项目",
-    tags: ["JavaScript", "React"],
-    progress: 50,
-    stars: 0,
-    forks: 0
-};
-
-// 示例友情链接数据
-const friendsData = [
-    {
-        name: "示例博客1",
-        url: "https://example1.com/",
-        description: "这是一个示例博客描述",
-        avatar: "https://example1.com/avatar.png"
-    },
-    {
-        name: "示例博客2",
-        url: "https://example2.com/",
-        description: "这是另一个示例博客描述",
-        avatar: "https://example2.com/avatar.png"
-    }
-];
-
-// 添加 normalizeLangName 函数定义
-function normalizeLangName(name) {
-    if (!name) return 'default';
-    return name.toLowerCase()
-        .replace(/\+/g, 'p')
-        .replace(/#/g, 'sharp')
-        .replace(/\./g, 'dot')
-        .replace(/-/g, '')
-        .replace(/\s+/g, '');
-}
+// ==================== 配置区域结束 ====================
 
 async function fetchArticlesData() {
+    // 如果没有配置文章API，返回空数组
+    if (!ARTICLES_API_CONFIG.URL) {
+        console.log('文章API未配置，使用示例数据');
+        return [
+            {
+                id: 1,
+                title: "示例文章标题",
+                description: "这是一篇示例文章",
+                text: "这是示例文章的内容。您可以在这里添加您的实际文章内容。",
+                created_at: new Date().toISOString()
+            }
+        ];
+    }
+
     try {
         showSkeletonLoading();
         const response = await fetch(ARTICLES_API_CONFIG.URL, {
@@ -99,17 +99,33 @@ async function fetchArticlesData() {
         }
 
         const data = await response.json();
-        console.log("API 返回的原始数据:", data); // 添加日志
+        console.log("API 返回的原始数据:", data);
         hideSkeletonLoading();
         // 对文章数据进行排序，按 created_at 降序排列
         const sortedRows = data.rows.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        return sortedRows; // 返回排序后的数据
+        return sortedRows;
     } catch (error) {
         console.error("Error fetching articles data:", error);
         hideSkeletonLoading();
         return [];
     }
 }
+
+// 示例友情链接数据 - 请替换为您的实际友链数据
+const friendsData = [
+    {
+        name: "示例友链1",
+        url: "https://example1.com/",
+        description: "这是一个示例友链",
+        avatar: "https://example1.com/favicon.ico"
+    },
+    {
+        name: "示例友链2",
+        url: "https://example2.com/",
+        description: "另一个示例友链",
+        avatar: "https://example2.com/favicon.ico"
+    }
+];
 
 // 渲染友情链接页面
 async function renderFriends() {
@@ -134,23 +150,23 @@ async function renderFriends() {
                 <div class="site-info-content">
                     <div class="site-info-item">
                         <span class="site-info-label">博客名称：</span>
-                        <span class="site-info-value">万事屋日记</span>
+                        <span class="site-info-value">个人网站模板</span>
                     </div>
                     <div class="site-info-item">
                         <span class="site-info-label">地址：</span>
-                        <span class="site-info-value"><a href="https://yuazhi.cn/" target="_blank">https://yuazhi.cn/</a></span>
+                        <span class="site-info-value"><a href="https://your-domain.com/" target="_blank">https://your-domain.com/</a></span>
                     </div>
                     <div class="site-info-item">
                         <span class="site-info-label">图标：</span>
-                        <span class="site-info-value"><a href="https://cdn.rjjr.cn/blog/2025/02/20250208101223856.png" target="_blank">点击查看</a></span>
+                        <span class="site-info-value"><a href="https://your-domain.com/favicon.ico" target="_blank">点击查看</a></span>
                     </div>
                     <div class="site-info-item">
                         <span class="site-info-label">简介：</span>
-                        <span class="site-info-value">每天写下自己的喜好</span>
+                        <span class="site-info-value">这是一个个人网站模板</span>
                     </div>
                     <div class="site-info-item">
                         <span class="site-info-label">提交邮箱：</span>
-                        <span class="site-info-value"><a href="mailto:hfyu2008@gmail.com">hfyu2008@gmail.com</a></span>
+                        <span class="site-info-value"><a href="mailto:your-email@example.com">your-email@example.com</a></span>
                     </div>
                 </div>
             </div>
@@ -190,44 +206,74 @@ async function fetchGitHubData() {
 
         // 获取每个仓库的详细信息，包括语言统计
         const repoDetails = await Promise.all(repos.map(async (repo) => {
-            const languagesResponse = await fetch(repo.languages_url, {
-                headers: headers
-            });
-            const languages = await languagesResponse.json();
-            
-            // 获取最近的提交
-            const commitsResponse = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_USERNAME}/${repo.name}/commits?per_page=1`, {
-                headers: headers
-            });
-            const commits = await commitsResponse.json();
-            
-            return {
-                name: repo.name,
-                description: repo.description || '',
-                tags: Object.keys(languages),
-                stars: repo.stargazers_count,
-                forks: repo.forks_count,
-                html_url: repo.html_url,
-                updated_at: repo.updated_at,
-                created_at: repo.created_at,
-                last_commit: commits.length > 0 ? commits[0].commit.author.date : null,
-                is_fork: repo.fork,
-                language: repo.language,
-                open_issues: repo.open_issues_count,
-                size: repo.size,
-                languages: languages
-            };
+            try {
+                console.log(`处理仓库: ${repo.name}`);
+                
+                const languagesResponse = await fetch(repo.languages_url, {
+                    headers: headers
+                });
+                const languages = await languagesResponse.json();
+                
+                // 验证仓库名称，避免特殊字符导致的API错误
+                const repoName = repo.name.replace(/[^a-zA-Z0-9._-]/g, '');
+                if (!repoName) {
+                    console.warn(`跳过无效的仓库名称: ${repo.name}`);
+                    return null;
+                }
+                
+                console.log(`清理后的仓库名称: ${repoName}`);
+                
+                // 获取最近的提交
+                let lastCommit = null;
+                try {
+                    const commitsResponse = await fetch(`${GITHUB_API_BASE}/repos/${GITHUB_USERNAME}/${repoName}/commits?per_page=1`, {
+                        headers: headers
+                    });
+                    
+                    if (commitsResponse.ok) {
+                        const commits = await commitsResponse.json();
+                        lastCommit = commits.length > 0 ? commits[0].commit.author.date : null;
+                    } else {
+                        console.warn(`无法获取仓库 ${repoName} 的提交信息: ${commitsResponse.status} - ${commitsResponse.statusText}`);
+                    }
+                } catch (commitError) {
+                    console.warn(`获取仓库 ${repoName} 提交信息时出错:`, commitError);
+                }
+                
+                return {
+                    name: repo.name,
+                    description: repo.description || '',
+                    tags: Object.keys(languages),
+                    stars: repo.stargazers_count,
+                    forks: repo.forks_count,
+                    html_url: repo.html_url,
+                    updated_at: repo.updated_at,
+                    created_at: repo.created_at,
+                    last_commit: lastCommit,
+                    is_fork: repo.fork,
+                    language: repo.language,
+                    open_issues: repo.open_issues_count,
+                    size: repo.size,
+                    languages: languages
+                };
+            } catch (error) {
+                console.error(`处理仓库 ${repo.name} 时出错:`, error);
+                return null;
+            }
         }));
 
+        // 过滤掉null值（处理失败的仓库）
+        const validRepoDetails = repoDetails.filter(repo => repo !== null);
+
         // 按更新时间排序
-        repoDetails.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
+        validRepoDetails.sort((a, b) => new Date(b.updated_at) - new Date(a.updated_at));
 
         // 更新项目数据
         projectsData.length = 0;
-        projectsData.push(...repoDetails);
+        projectsData.push(...validRepoDetails);
 
         // 更新进行中的项目（使用最近更新的非fork仓库）
-        const mostRecentRepo = repoDetails.find(repo => !repo.is_fork);
+        const mostRecentRepo = validRepoDetails.find(repo => !repo.is_fork);
         if (mostRecentRepo) {
             ongoingProject.name = mostRecentRepo.name;
             ongoingProject.description = mostRecentRepo.description;
@@ -239,7 +285,7 @@ async function fetchGitHubData() {
             ongoingProject.progress = Math.max(0, Math.min(100, 100 - Math.floor(daysSinceLastCommit)));
         }
 
-        return repoDetails;
+        return validRepoDetails;
     } catch (error) {
         console.error('Error fetching GitHub data:', error);
         throw error;
@@ -401,8 +447,35 @@ function generateContributionData() {
 }
 
 // 修改获取GitHub贡献数据的函数
-async function fetchContributionData(year = new Date().getFullYear()) {
+async function fetchContributionData(year = new Date().getFullYear(), forceRefresh = false) {
     try {
+        // 缓存键名
+        const cacheKey = `contribution_data_${year}`;
+        const cacheTimestampKey = `contribution_timestamp_${year}`;
+        
+        // 检查缓存是否有效（5分钟过期）
+        const CACHE_DURATION = 5 * 60 * 1000; // 5分钟
+        const now = Date.now();
+        const cachedTimestamp = localStorage.getItem(cacheTimestampKey);
+        const cachedData = localStorage.getItem(cacheKey);
+        
+        // 如果不是强制刷新且缓存有效，直接返回缓存数据
+        if (!forceRefresh && cachedData && cachedTimestamp) {
+            const cacheAge = now - parseInt(cachedTimestamp);
+            if (cacheAge < CACHE_DURATION) {
+                console.log(`使用缓存的贡献数据 (${year})`);
+                const parsedData = JSON.parse(cachedData);
+                // 恢复Date对象
+                parsedData.contributionData = parsedData.contributionData.map(day => ({
+                    ...day,
+                    date: new Date(day.date)
+                }));
+                return parsedData;
+            }
+        }
+
+        console.log(`正在获取最新的贡献数据 (${year})...`);
+        
         const headers = {
             'Accept': 'application/vnd.github.v3+json'
         };
@@ -414,22 +487,47 @@ async function fetchContributionData(year = new Date().getFullYear()) {
         // 获取指定年份的贡献数据
         const startDate = new Date(year, 0, 1);
         const endDate = new Date(year, 11, 31);
-        const response = await fetch(
-            `https://api.github.com/users/${GITHUB_USERNAME}/events?per_page=100`, 
-            { headers }
-        );
         
-        if (!response.ok) {
-            throw new Error(`GitHub API error: ${response.status}`);
+        // 使用分页方式获取更多事件
+        let allEvents = [];
+        let page = 1;
+        let hasMorePages = true;
+        const maxPages = 20; // 增加最大获取页数，确保获取足够的事件
+        
+        while (hasMorePages && page <= maxPages) {
+            const response = await fetch(
+                `https://api.github.com/users/${GITHUB_USERNAME}/events?per_page=100&page=${page}`, 
+                { headers }
+            );
+            
+            if (!response.ok) {
+                throw new Error(`GitHub API error: ${response.status}`);
+            }
+            
+            const events = await response.json();
+            
+            if (events.length === 0) {
+                hasMorePages = false;
+            } else {
+                allEvents = [...allEvents, ...events];
+                
+                // 检查最后一个事件的日期是否早于我们需要的年份
+                const lastEventDate = new Date(events[events.length - 1].created_at);
+                if (lastEventDate < startDate) {
+                    hasMorePages = false;
+                }
+                
+                page++;
+            }
         }
         
-        const events = await response.json();
+        console.log(`获取到 ${allEvents.length} 个GitHub事件`);
         
         // 处理事件数据，按日期分组
         const contributionsByDate = {};
         const activitiesByMonth = {};
 
-        events.forEach(event => {
+        allEvents.forEach(event => {
             const eventDate = new Date(event.created_at);
             if (eventDate >= startDate && eventDate <= endDate) {
                 const dateStr = eventDate.toISOString().split('T')[0];
@@ -455,7 +553,7 @@ async function fetchContributionData(year = new Date().getFullYear()) {
                                 type: 'commit',
                                 repo: event.repo.name.split('/')[1],
                                 count: commitCount,
-                                description: `Created ${commitCount} commits in 1 repository`,
+                                description: `Created ${commitCount} commit${commitCount > 1 ? 's' : ''} in ${event.repo.name.split('/')[1]}`,
                                 date: eventDate.toLocaleString('en-US', { month: 'short', day: 'numeric' })
                             });
                         }
@@ -463,20 +561,135 @@ async function fetchContributionData(year = new Date().getFullYear()) {
                     case 'CreateEvent':
                         contributionsByDate[dateStr] += 1;
                         if (event.payload.ref_type === 'repository') {
+                            // 获取仓库的主要语言
+                            const language = event.payload.description || 'Unknown';
                             activitiesByMonth[monthStr].push({
                                 type: 'create',
                                 repo: event.repo.name.split('/')[1],
-                                language: event.payload.description || 'Unknown',
-                                description: 'Created 1 repository',
+                                language: language,
+                                description: `Created repository ${event.repo.name.split('/')[1]}`,
+                                date: eventDate.toLocaleString('en-US', { month: 'short', day: 'numeric' })
+                            });
+                        } else if (event.payload.ref_type === 'branch') {
+                            activitiesByMonth[monthStr].push({
+                                type: 'branch',
+                                repo: event.repo.name.split('/')[1],
+                                branch: event.payload.ref,
+                                description: `Created branch ${event.payload.ref} in ${event.repo.name.split('/')[1]}`,
                                 date: eventDate.toLocaleString('en-US', { month: 'short', day: 'numeric' })
                             });
                         }
                         break;
                     case 'IssuesEvent':
+                        contributionsByDate[dateStr] += 1;
+                        const issueAction = event.payload.action;
+                        const issueTitleText = event.payload.issue?.title || 'issue';
+                        activitiesByMonth[monthStr].push({
+                            type: 'issue',
+                            repo: event.repo.name.split('/')[1],
+                            action: issueAction,
+                            title: issueTitleText,
+                            description: `${issueAction} issue "${issueTitleText}" in ${event.repo.name.split('/')[1]}`,
+                            date: eventDate.toLocaleString('en-US', { month: 'short', day: 'numeric' })
+                        });
+                        break;
                     case 'PullRequestEvent':
+                        contributionsByDate[dateStr] += 1;
+                        const prAction = event.payload.action;
+                        const prTitleText = event.payload.pull_request?.title || 'pull request';
+                        activitiesByMonth[monthStr].push({
+                            type: 'pr',
+                            repo: event.repo.name.split('/')[1],
+                            action: prAction,
+                            title: prTitleText,
+                            description: `${prAction} pull request "${prTitleText}" in ${event.repo.name.split('/')[1]}`,
+                            date: eventDate.toLocaleString('en-US', { month: 'short', day: 'numeric' })
+                        });
+                        break;
                     case 'IssueCommentEvent':
+                        contributionsByDate[dateStr] += 1;
+                        const commentAction = event.payload.action;
+                        const commentIssueTitle = event.payload.issue?.title || 'issue';
+                        activitiesByMonth[monthStr].push({
+                            type: 'comment',
+                            repo: event.repo.name.split('/')[1],
+                            action: commentAction,
+                            title: commentIssueTitle,
+                            description: `${commentAction} comment on issue "${commentIssueTitle}" in ${event.repo.name.split('/')[1]}`,
+                            date: eventDate.toLocaleString('en-US', { month: 'short', day: 'numeric' })
+                        });
+                        break;
                     case 'PullRequestReviewEvent':
                         contributionsByDate[dateStr] += 1;
+                        const reviewAction = event.payload.action;
+                        const reviewPrTitle = event.payload.pull_request?.title || 'pull request';
+                        activitiesByMonth[monthStr].push({
+                            type: 'review',
+                            repo: event.repo.name.split('/')[1],
+                            action: reviewAction,
+                            title: reviewPrTitle,
+                            description: `${reviewAction} review on pull request "${reviewPrTitle}" in ${event.repo.name.split('/')[1]}`,
+                            date: eventDate.toLocaleString('en-US', { month: 'short', day: 'numeric' })
+                        });
+                        break;
+                    case 'WatchEvent':
+                        contributionsByDate[dateStr] += 1;
+                        activitiesByMonth[monthStr].push({
+                            type: 'star',
+                            repo: event.repo.name,
+                            description: `Starred ${event.repo.name}`,
+                            date: eventDate.toLocaleString('en-US', { month: 'short', day: 'numeric' })
+                        });
+                        break;
+                    case 'ForkEvent':
+                        contributionsByDate[dateStr] += 1;
+                        const forkedRepo = event.repo.name;
+                        const forkDescription = event.payload.forkee?.full_name ? 
+                            `Forked ${event.repo.name} to ${event.payload.forkee.full_name}` : 
+                            `Forked ${event.repo.name}`;
+                        activitiesByMonth[monthStr].push({
+                            type: 'fork',
+                            repo: event.repo.name,
+                            forkedTo: event.payload.forkee?.full_name || null,
+                            description: forkDescription,
+                            date: eventDate.toLocaleString('en-US', { month: 'short', day: 'numeric' })
+                        });
+                        break;
+                    case 'DeleteEvent':
+                        if (event.payload.ref_type === 'branch') {
+                            contributionsByDate[dateStr] += 1;
+                            activitiesByMonth[monthStr].push({
+                                type: 'delete',
+                                repo: event.repo.name.split('/')[1],
+                                branch: event.payload.ref,
+                                description: `Deleted branch ${event.payload.ref} in ${event.repo.name.split('/')[1]}`,
+                                date: eventDate.toLocaleString('en-US', { month: 'short', day: 'numeric' })
+                            });
+                        }
+                        break;
+                    case 'ReleaseEvent':
+                        contributionsByDate[dateStr] += 1;
+                        const releaseName = event.payload.release?.name || event.payload.release?.tag_name || 'release';
+                        activitiesByMonth[monthStr].push({
+                            type: 'release',
+                            repo: event.repo.name.split('/')[1],
+                            release: releaseName,
+                            description: `Created release ${releaseName} in ${event.repo.name.split('/')[1]}`,
+                            date: eventDate.toLocaleString('en-US', { month: 'short', day: 'numeric' })
+                        });
+                        break;
+                    case 'GollumEvent':
+                        contributionsByDate[dateStr] += 1;
+                        const pageName = event.payload.pages?.[0]?.title || 'wiki page';
+                        const pageAction = event.payload.pages?.[0]?.action || 'updated';
+                        activitiesByMonth[monthStr].push({
+                            type: 'wiki',
+                            repo: event.repo.name.split('/')[1],
+                            page: pageName,
+                            action: pageAction,
+                            description: `${pageAction} wiki page "${pageName}" in ${event.repo.name.split('/')[1]}`,
+                            date: eventDate.toLocaleString('en-US', { month: 'short', day: 'numeric' })
+                        });
                         break;
                 }
             }
@@ -503,11 +716,18 @@ async function fetchContributionData(year = new Date().getFullYear()) {
             });
         }
 
-        // 返回贡献数据和活动数据
-        return {
+        // 准备返回的数据
+        const result = {
             contributionData: data,
             activityData: activitiesByMonth
         };
+
+        // 缓存数据
+        localStorage.setItem(cacheKey, JSON.stringify(result));
+        localStorage.setItem(cacheTimestampKey, now.toString());
+        
+        console.log(`贡献数据已缓存 (${year})`);
+        return result;
     } catch (error) {
         console.error('Error fetching contribution data:', error);
         return {
@@ -515,6 +735,170 @@ async function fetchContributionData(year = new Date().getFullYear()) {
             activityData: {}
         };
     }
+}
+
+// 添加检查贡献数据更新的函数
+async function checkContributionUpdates() {
+    try {
+        const currentYear = new Date().getFullYear();
+        const cacheKey = `contribution_data_${currentYear}`;
+        const cacheTimestampKey = `contribution_timestamp_${currentYear}`;
+        
+        // 获取缓存的时间戳
+        const cachedTimestamp = localStorage.getItem(cacheTimestampKey);
+        if (!cachedTimestamp) {
+            return false; // 没有缓存，需要更新
+        }
+        
+        // 检查缓存是否过期（1分钟检查一次）
+        const CACHE_CHECK_INTERVAL = 1 * 60 * 1000; // 1分钟
+        const now = Date.now();
+        const cacheAge = now - parseInt(cachedTimestamp);
+        
+        if (cacheAge > CACHE_CHECK_INTERVAL) {
+            // 获取最新的前几个事件来检查是否有新活动
+            const headers = {
+                'Accept': 'application/vnd.github.v3+json'
+            };
+            
+            if (GITHUB_TOKEN) {
+                headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+            }
+            
+            const response = await fetch(
+                `https://api.github.com/users/${GITHUB_USERNAME}/events?per_page=5`, 
+                { headers }
+            );
+            
+            if (response.ok) {
+                const events = await response.json();
+                if (events.length > 0) {
+                    const latestEventTime = new Date(events[0].created_at).getTime();
+                    const cacheTime = parseInt(cachedTimestamp);
+                    
+                    // 如果最新事件时间晚于缓存时间，说明有新活动
+                    if (latestEventTime > cacheTime) {
+                        console.log('检测到新的GitHub活动，需要更新贡献数据');
+                        console.log('最新活动类型:', events[0].type);
+                        return true;
+                    }
+                }
+            }
+        }
+        
+        return false;
+    } catch (error) {
+        console.error('Error checking contribution updates:', error);
+        return false;
+    }
+}
+
+// 添加手动刷新贡献数据的函数
+async function refreshContributionData() {
+    try {
+        const refreshButton = document.querySelector('.refresh-button');
+        if (refreshButton) {
+            // 添加加载状态
+            refreshButton.classList.add('loading');
+            refreshButton.disabled = true;
+        }
+        
+        const currentYear = new Date().getFullYear();
+        console.log('手动刷新贡献数据...');
+        
+        // 强制刷新当前年份的数据
+        const { contributionData: data, activityData } = await fetchContributionData(currentYear, true);
+        
+        // 更新页面显示
+        await updateContributionDisplay(data, activityData, currentYear);
+        
+        // 显示刷新成功提示
+        showRefreshToast('贡献数据已更新');
+        
+    } catch (error) {
+        console.error('Error refreshing contribution data:', error);
+        showRefreshToast('更新失败，请稍后重试', 'error');
+    } finally {
+        // 移除加载状态
+        const refreshButton = document.querySelector('.refresh-button');
+        if (refreshButton) {
+            refreshButton.classList.remove('loading');
+            refreshButton.disabled = false;
+        }
+    }
+}
+
+// 添加更新贡献显示的辅助函数
+async function updateContributionDisplay(data, activityData, year) {
+    const content = document.querySelector('.contributions');
+    if (!content) return;
+
+    const totalContributions = data.reduce((sum, day) => sum + day.contributions, 0);
+
+    // 更新标题
+    const header = content.querySelector('.contribution-header h2');
+    if (header) {
+        header.textContent = `${totalContributions} contributions in ${year}`;
+    }
+
+    // 更新贡献网格
+    const grid = content.querySelector('.contribution-grid');
+    if (grid) {
+        grid.innerHTML = data.map(day => {
+            const date = day.date instanceof Date ? day.date : new Date(day.date);
+            return `
+            <div class="contribution-cell" 
+                data-level="${day.level}"
+                title="${date.toLocaleDateString()} - ${day.contributions} contributions">
+            </div>
+        `}).join('');
+    }
+
+    // 更新活动时间线
+    const timeline = content.querySelector('.activity-timeline');
+    if (timeline) {
+        timeline.innerHTML = renderActivityTimeline(data, activityData);
+    }
+}
+
+// 添加显示刷新提示的函数
+function showRefreshToast(message, type = 'success') {
+    // 移除现有的提示
+    const existingToast = document.querySelector('.refresh-toast');
+    if (existingToast) {
+        existingToast.remove();
+    }
+    
+    const toast = document.createElement('div');
+    toast.className = `refresh-toast ${type}`;
+    toast.innerHTML = `
+        <div class="toast-content">
+            <svg class="toast-icon" viewBox="0 0 16 16" width="16" height="16">
+                ${type === 'success' ? 
+                    '<path d="M13.78 4.22a.75.75 0 0 1 0 1.06l-7.25 7.25a.75.75 0 0 1-1.06 0L2.22 9.28a.75.75 0 0 1 1.06-1.06L6 10.94l6.72-6.72a.75.75 0 0 1 1.06 0Z"></path>' :
+                    '<path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm3.82 1.636a.75.75 0 0 1 1.038.175l.007.009c.103.118.22.222.35.31.264.178.683.37 1.285.37.602 0 1.02-.192 1.285-.371.13-.088.247-.192.35-.31l.007-.008a.75.75 0 0 1 1.222.87l-.614-.431c.614.43.614.431.613.431v.001l-.001.002-.002.003-.005.007-.014.019a1.984 1.984 0 0 1-.184.213c-.16.166-.338.316-.53.445-.63.418-1.37.638-2.127.629-.946 0-1.652-.308-2.126-.63a3.32 3.32 0 0 1-.715-.657 2.248 2.248 0 0 1-.207-.23l-.01-.013-.004-.006-.002-.003v-.002h-.001l.613-.432-.614.43a.75.75 0 0 1 .183-1.044ZM12 6a.75.75 0 0 1-.75.75h-6.5a.75.75 0 0 1 0-1.5h6.5A.75.75 0 0 1 12 6Z"></path>'
+                }
+            </svg>
+            <span>${message}</span>
+        </div>
+    `;
+    
+    document.body.appendChild(toast);
+    
+    // 显示动画
+    setTimeout(() => {
+        toast.classList.add('show');
+    }, 10);
+    
+    // 自动隐藏
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.parentNode.removeChild(toast);
+            }
+        }, 300);
+    }, 3000);
 }
 
 // 修改渲染活动时间线的函数，添加 activities 参数
@@ -540,12 +924,27 @@ function renderActivityTimeline(data, activities = null) {
 
     let timelineHtml = '';
     let totalActivityItems = 0; // This variable tracks the total count of actual activity items for 'Show more' button logic.
+    let visibleActivityItems = 0; // 跟踪可见的活动项数量
+
+    // 设置初始显示的活动数量
+    const initialVisibleCount = 5;
 
     // Sort months in descending order (most recent first) for display
     const sortedMonths = Object.keys(effectiveActivities).sort((a, b) => {
         const dateA = new Date(a);
         const dateB = new Date(b);
         return dateB - dateA;
+    });
+
+    // 创建一个平面化的活动列表，用于计算前5个活动
+    let allActivities = [];
+    sortedMonths.forEach(month => {
+        effectiveActivities[month].forEach(activity => {
+            allActivities.push({
+                month,
+                activity
+            });
+        });
     });
 
     sortedMonths.forEach(month => {
@@ -565,98 +964,333 @@ function renderActivityTimeline(data, activities = null) {
                     </div>
                     <div class="activity-content">
                         <div class="activity-header">
-                            yuazhi has no activity yet for this period.
+                            ${GITHUB_USERNAME} has no activity yet for this period.
                         </div>
                     </div>
                 </div>
             `;
             // Do not increment totalActivityItems for this placeholder
         } else {
-            // Determine if this month's activities should be hidden by default
-            if (totalActivityItems >= 4) {
-                hideMonthClass = 'hidden-activity';
-            }
-
             // Generate HTML for all activities in this month
             monthContentHtml = monthActivities.map(activity => {
                 // Increment totalActivityItems for each actual activity item
                 totalActivityItems++;
-
-                if (activity.type === 'commit') {
-                    return `
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                    <path d="M11.93 8.5a4.002 4.002 0 0 1-7.86 0H.75a.75.75 0 0 1 0-1.5h3.32a4.002 4.002 0 0 1 7.86 0h3.32a.75.75 0 0 1 0 1.5Zm-1.43-.75a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z"></path>
-                                </svg>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-header">
-                                    ${activity.description}
-                                </div>
-                                <div class="activity-details">
-                                    <a href="https://github.com/${GITHUB_USERNAME}/${activity.repo}" target="_blank" class="repo-link">
-                                        ${activity.repo}
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                } else if (activity.type === 'create') {
-                    return `
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                    <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"></path>
-                                </svg>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-header">
-                                    ${activity.description}
-                                </div>
-                                <div class="activity-details">
-                                    <a href="https://github.com/${GITHUB_USERNAME}/${activity.repo}" target="_blank" class="repo-link">
-                                        ${GITHUB_USERNAME}/${activity.repo}
-                                    </a>
-                                    <span class="language-tag">
-                                        <span class="language-dot" style="background-color: var(--color-${activity.language}, var(--color-default));"></span>
-                                        ${activity.language}
-                                    </span>
-                                    <span class="activity-date">${activity.date}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
-                } else { // Handle other event types not explicitly covered if needed
-                    // For simplicity, if not commit or create, just add a generic item.
-                    // This ensures the total count is accurate for show more.
-                    return `
-                        <div class="activity-item">
-                            <div class="activity-icon">
-                                <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                                    <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"></path>
-                                </svg>
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-header">
-                                    ${activity.description || 'GitHub Activity'}
-                                </div>
-                                <div class="activity-details">
-                                    <a href="https://github.com/${GITHUB_USERNAME}/" target="_blank" class="repo-link">
-                                        ${GITHUB_USERNAME}
-                                    </a>
-                                    <span class="activity-date">${activity.date || ''}</span>
-                                </div>
-                            </div>
-                        </div>
-                    `;
+                
+                // 确定这个活动是否应该被隐藏
+                const shouldBeVisible = visibleActivityItems < initialVisibleCount;
+                if (shouldBeVisible) {
+                    visibleActivityItems++;
                 }
+                
+                const activityItemClass = shouldBeVisible ? '' : 'hidden-activity-item';
+
+                // 根据不同的活动类型返回不同的HTML
+                let activityHtml = '';
+                switch(activity.type) {
+                    case 'commit':
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M11.93 8.5a4.002 4.002 0 0 1-7.86 0H.75a.75.75 0 0 1 0-1.5h3.32a4.002 4.002 0 0 1 7.86 0h3.32a.75.75 0 0 1 0 1.5Zm-1.43-.75a2.5 2.5 0 1 0-5 0 2.5 2.5 0 0 0 5 0Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${GITHUB_USERNAME}/${activity.repo}" target="_blank" class="repo-link">
+                                            ${activity.repo}
+                                        </a>
+                                        <span class="activity-date">${activity.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'create':
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M2 2.5A2.5 2.5 0 0 1 4.5 0h8.75a.75.75 0 0 1 .75.75v12.5a.75.75 0 0 1-.75.75h-2.5a.75.75 0 0 1 0-1.5h1.75v-2h-8a1 1 0 0 0-.714 1.7.75.75 0 1 1-1.072 1.05A2.495 2.495 0 0 1 2 11.5Zm10.5-1h-8a1 1 0 0 0-1 1v6.708A2.486 2.486 0 0 1 4.5 9h8ZM5 12.25a.25.25 0 0 1 .25-.25h3.5a.25.25 0 0 1 .25.25v3.25a.25.25 0 0 1-.4.2l-1.45-1.087a.249.249 0 0 0-.3 0L5.4 15.7a.25.25 0 0 1-.4-.2Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${GITHUB_USERNAME}/${activity.repo}" target="_blank" class="repo-link">
+                                            ${GITHUB_USERNAME}/${activity.repo}
+                                        </a>
+                                        <span class="language-tag">
+                                            <span class="language-dot" style="background-color: var(--color-${normalizeLangName(activity.language)}, var(--color-default));"></span>
+                                            ${activity.language}
+                                        </span>
+                                        <span class="activity-date">${activity.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'issue':
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${GITHUB_USERNAME}/${activity.repo}" target="_blank" class="repo-link">
+                                            ${activity.repo}
+                                        </a>
+                                        <span class="activity-date">${activity.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'pr':
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M1.5 3.25a2.25 2.25 0 1 1 3 2.122v5.256a2.251 2.251 0 1 1-1.5 0V5.372A2.25 2.25 0 0 1 1.5 3.25Zm5.677-.177L9.573.677A.25.25 0 0 1 10 .854V2.5h1A2.5 2.5 0 0 1 13.5 5v5.628a2.251 2.251 0 1 1-1.5 0V5a1 1 0 0 0-1-1h-1v1.646a.25.25 0 0 1-.427.177L7.177 3.427a.25.25 0 0 1 0-.354ZM3.75 2.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm0 9.5a.75.75 0 1 0 0 1.5.75.75 0 0 0 0-1.5Zm8.25.75a.75.75 0 1 0 1.5 0 .75.75 0 0 0-1.5 0Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${GITHUB_USERNAME}/${activity.repo}" target="_blank" class="repo-link">
+                                            ${activity.repo}
+                                        </a>
+                                        <span class="activity-date">${activity.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'comment':
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M1 2.75C1 1.784 1.784 1 2.75 1h10.5c.966 0 1.75.784 1.75 1.75v7.5A1.75 1.75 0 0 1 13.25 12H9.06l-2.573 2.573A1.458 1.458 0 0 1 4 13.543V12H2.75A1.75 1.75 0 0 1 1 10.25Zm1.75-.25a.25.25 0 0 0-.25.25v7.5c0 .138.112.25.25.25h2a.75.75 0 0 1 .75.75v2.19l2.72-2.72a.749.749 0 0 1 .53-.22h4.5a.25.25 0 0 0 .25-.25v-7.5a.25.25 0 0 0-.25-.25Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${GITHUB_USERNAME}/${activity.repo}" target="_blank" class="repo-link">
+                                            ${activity.repo}
+                                        </a>
+                                        <span class="activity-date">${activity.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'review':
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm4.936-2.41 4.189 3.348a.75.75 0 0 1 0 1.124l-4.19 3.348a.75.75 0 0 1-1.186-.61V6.2a.75.75 0 0 1 1.186-.61Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${GITHUB_USERNAME}/${activity.repo}" target="_blank" class="repo-link">
+                                            ${activity.repo}
+                                        </a>
+                                        <span class="activity-date">${activity.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'star':
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.751.751 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${activity.repo}" target="_blank" class="repo-link">
+                                            ${activity.repo}
+                                        </a>
+                                        <span class="activity-date">${activity.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'fork':
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M5 5.372v.878c0 .414.336.75.75.75h4.5a.75.75 0 0 0 .75-.75v-.878a2.25 2.25 0 1 1 1.5 0v.878a2.25 2.25 0 0 1-2.25 2.25h-1.5v2.128a2.251 2.251 0 1 1-1.5 0V8.5h-1.5A2.25 2.25 0 0 1 3.5 6.25v-.878a2.25 2.25 0 1 1 1.5 0ZM5 3.25a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Zm6.75.75a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Zm-3 8.75a.75.75 0 1 0-1.5 0 .75.75 0 0 0 1.5 0Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${activity.repo}" target="_blank" class="repo-link">
+                                            ${activity.repo}
+                                        </a>
+                                        ${activity.forkedTo ? `
+                                            <span class="fork-arrow">→</span>
+                                            <a href="https://github.com/${activity.forkedTo}" target="_blank" class="repo-link">
+                                                ${activity.forkedTo}
+                                            </a>
+                                        ` : ''}
+                                        <span class="activity-date">${activity.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'branch':
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M3.75 1.5a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V6h-2.75A1.75 1.75 0 0 1 9 4.25V1.5H3.75Zm6.75.75V4.25c0 .138.112.25.25.25H12.5v7h-9V2.25h6.5V2.25ZM5 3.25a.75.75 0 0 1 .75-.75h3.5a.75.75 0 0 1 0 1.5h-3.5a.75.75 0 0 1-.75-.75Zm0 2.5a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Zm0 2.5a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${GITHUB_USERNAME}/${activity.repo}" target="_blank" class="repo-link">
+                                            ${activity.repo}
+                                        </a>
+                                        <span class="activity-date">${activity.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'delete':
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M11 1.75V3h2.25a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1 0-1.5H5V1.75C5 .784 5.784 0 6.75 0h2.5C10.216 0 11 .784 11 1.75ZM4.496 6.675l.66 6.6a.75.75 0 0 0 1.493.154l.825-4.25a.75.75 0 0 1 1.494.154l.825 4.25a.75.75 0 0 0 1.493-.154l.66-6.6a.75.75 0 0 1 1.494.154l.66 6.6A2.25 2.25 0 0 1 13.174 15H2.826a2.25 2.25 0 0 1-2.065-2.171l-.66-6.6a.75.75 0 0 1 1.494-.154ZM6 1.75V3h4V1.75a.25.25 0 0 0-.25-.25h-3.5a.25.25 0 0 0-.25.25Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${GITHUB_USERNAME}/${activity.repo}" target="_blank" class="repo-link">
+                                            ${activity.repo}
+                                        </a>
+                                        <span class="activity-date">${activity.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'release':
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M8.177.677l2.896 2.896a.25.25 0 0 1 0 .354L8.177 6.823l-2.896-2.896a.25.25 0 0 1 0-.354l2.896-2.896zM1.25 7.5l2.896 2.896a.25.25 0 0 1 0 .354L1.25 13.677l-2.896-2.896a.25.25 0 0 1 0-.354L1.25 7.5zM14.75 7.5l2.896 2.896a.25.25 0 0 1 0 .354L14.75 13.677l-2.896-2.896a.25.25 0 0 1 0-.354L14.75 7.5z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${GITHUB_USERNAME}/${activity.repo}" target="_blank" class="repo-link">
+                                            ${activity.repo}
+                                        </a>
+                                        <span class="activity-date">${activity.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    case 'wiki':
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M0 1.75C0 .784.784 0 1.75 0h12.5C15.216 0 16 .784 16 1.75v12.5A1.75 1.75 0 0 1 14.25 16H1.75A1.75 1.75 0 0 1 0 14.25Zm1.75-.25a.25.25 0 0 0-.25.25v12.5c0 .138.112.25.25.25h12.5a.25.25 0 0 0 .25-.25V1.75a.25.25 0 0 0-.25-.25Zm7.47 3.97a.75.75 0 0 1 1.06 0l2 2a.75.75 0 0 1 0 1.06l-2 2a.75.75 0 1 1-1.06-1.06l1.47-1.47H6.75a.75.75 0 0 1 0-1.5h3.69L9.22 6.28a.75.75 0 0 1 0-1.06Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${GITHUB_USERNAME}/${activity.repo}" target="_blank" class="repo-link">
+                                            ${activity.repo}
+                                        </a>
+                                        <span class="activity-date">${activity.date}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                        break;
+                    default: // Handle other event types not explicitly covered
+                        activityHtml = `
+                            <div class="activity-item ${activityItemClass}">
+                                <div class="activity-icon">
+                                    <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                                        <path d="M8 9.5a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3Z"></path><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Z"></path>
+                                    </svg>
+                                </div>
+                                <div class="activity-content">
+                                    <div class="activity-header">
+                                        ${activity.description || 'GitHub Activity'}
+                                    </div>
+                                    <div class="activity-details">
+                                        <a href="https://github.com/${GITHUB_USERNAME}/" target="_blank" class="repo-link">
+                                            ${GITHUB_USERNAME}
+                                        </a>
+                                        <span class="activity-date">${activity.date || ''}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                }
+                
+                return activityHtml;
             }).join('');
         }
 
         // Append the month container with its content
         timelineHtml += `
-            <div class="activity-month ${hideMonthClass}">
+            <div class="activity-month">
                 <div class="activity-month-header">
                     <h3>${month}</h3>
                 </div>
@@ -690,7 +1324,7 @@ function renderActivityTimeline(data, activities = null) {
     }
 
     // The show more button logic should check against the total number of actual activity items
-    if (totalActivityItems > 4) {
+    if (totalActivityItems > initialVisibleCount) {
         timelineHtml += `
             <div class="show-more">
                 <button class="show-more-button" onclick="toggleActivity(event)">
@@ -717,24 +1351,33 @@ async function renderContributionGraph() {
             <div class="contribution-header">
                 <div class="contribution-title-group">
                     <h2>${totalContributions} contributions in ${currentYear}</h2>
-                    <div class="year-select-container">
-                        <select class="year-select" onchange="updateContributionYear(this.value)">
-                            <option value="2025" selected>2025</option>
-                            <option value="2024">2024</option>
-                            <option value="2023">2023</option>
-                        </select>
+                    <div class="contribution-controls">
+                        <div class="year-select-container">
+                            <select class="year-select" onchange="updateContributionYear(this.value)">
+                                <option value="2025" selected>2025</option>
+                                <option value="2024">2024</option>
+                                <option value="2023">2023</option>
+                            </select>
+                        </div>
+                        <button class="refresh-button" onclick="refreshContributionData()" title="刷新贡献数据">
+                            <svg viewBox="0 0 16 16" width="16" height="16" fill="currentColor">
+                                <path d="M8 3a5 5 0 0 0-5 5H1l3.5 3.5L8 8H6a2 2 0 1 1 2 2v2a4 4 0 1 0-4-4H2a6 6 0 1 1 6 6v-2a4 4 0 0 0 0-8Z"></path>
+                            </svg>
+                        </button>
                     </div>
                 </div>
             </div>
             
             <div class="contribution-calendar">
                 <div class="contribution-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(10px, 1fr)); grid-template-rows: repeat(7, 1fr); gap: 2px; overflow: hidden;">
-                    ${data.map(day => `
+                    ${data.map(day => {
+                        const date = day.date instanceof Date ? day.date : new Date(day.date);
+                        return `
                         <div class="contribution-cell" 
                             data-level="${day.level}"
-                            title="${day.date.toLocaleDateString()} - ${day.contributions} contributions">
+                            title="${date.toLocaleDateString()} - ${day.contributions} contributions">
                         </div>
-                    `).join('')}
+                    `}).join('')}
                 </div>
                 <div class="contribution-legend">
                     <span>Less</span>
@@ -765,7 +1408,7 @@ async function renderContributionGraph() {
 }
 
 // 修改更新年份的函数
-async function updateContributionYear(year) {
+async function updateContributionYear(year, forceRefresh = false) {
     try {
         const content = document.querySelector('.contributions');
         if (!content) return;
@@ -777,7 +1420,7 @@ async function updateContributionYear(year) {
         }
 
         // 重新获取并渲染贡献数据
-        const { contributionData: data, activityData } = await fetchContributionData(year);
+        const { contributionData: data, activityData } = await fetchContributionData(year, forceRefresh);
         const totalContributions = data.reduce((sum, day) => sum + day.contributions, 0);
 
         // 更新标题
@@ -789,12 +1432,14 @@ async function updateContributionYear(year) {
         // 更新贡献网格
         const grid = content.querySelector('.contribution-grid');
         if (grid) {
-            grid.innerHTML = data.map(day => `
+            grid.innerHTML = data.map(day => {
+                const date = day.date instanceof Date ? day.date : new Date(day.date);
+                return `
                 <div class="contribution-cell" 
                     data-level="${day.level}"
-                    title="${day.date.toLocaleDateString()} - ${day.contributions} contributions">
+                    title="${date.toLocaleDateString()} - ${day.contributions} contributions">
                 </div>
-            `).join('');
+            `}).join('');
         }
 
         // 更新活动时间线
@@ -831,7 +1476,7 @@ async function renderOverview() {
             if (repo.language) allLanguages.add(repo.language);
             if (repo.tags) repo.tags.forEach(tag => allLanguages.add(tag));
         });
-        
+        ['Python', 'TypeScript', 'Vue', 'React', 'Node.js', 'Dart', 'Rust', 'C++', 'C#'].forEach(lang => allLanguages.add(lang));
         content.innerHTML = `
             ${mostRecentRepo ? `
                 <div class="ongoing-project-title">
@@ -906,13 +1551,13 @@ async function renderProjects() {
 // 修改微信二维码弹窗功能
 function showWechat(event) {
     event.preventDefault();
-    showQRCode('微信', '替换为自己的图片', '扫码添加微信');
+    showQRCode('微信', '#', '扫码添加微信');
 }
 
 // 添加 QQ 二维码弹窗功能
 function showQQ(event) {
     event.preventDefault();
-    showQRCode('QQ', '替换为自己的图片', '扫码添加QQ');
+    showQRCode('QQ', '#', '扫码添加QQ');
 }
 
 // 通用的二维码弹窗显示函数
@@ -1118,15 +1763,26 @@ async function renderStars() {
 async function fetchProjectDetail(projectName) {
     try {
         const headers = {
-            'Accept': 'application/vnd.github.v3+json',
-            'Authorization': `token ${GITHUB_TOKEN}`
+            'Accept': 'application/vnd.github.v3+json'
         };
+        
+        if (GITHUB_TOKEN) {
+            headers['Authorization'] = `token ${GITHUB_TOKEN}`;
+        }
 
         // 如果 projectName 包含 '/'，说明是完整的仓库名称
         const [owner, repo] = projectName.includes('/') ? projectName.split('/') : [GITHUB_USERNAME, projectName];
+        
+        // 验证仓库名称，避免特殊字符导致的API错误
+        const cleanOwner = owner.replace(/[^a-zA-Z0-9._-]/g, '');
+        const cleanRepo = repo.replace(/[^a-zA-Z0-9._-]/g, '');
+        
+        if (!cleanOwner || !cleanRepo) {
+            throw new Error(`无效的仓库名称: ${owner}/${repo}`);
+        }
 
         // 获取仓库详细信息
-        const repoResponse = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}`, { headers });
+        const repoResponse = await fetch(`${GITHUB_API_BASE}/repos/${cleanOwner}/${cleanRepo}`, { headers });
         if (!repoResponse.ok) {
             throw new Error(`Failed to fetch repository: ${repoResponse.status}`);
         }
@@ -1137,16 +1793,27 @@ async function fetchProjectDetail(projectName) {
         const languages = await languagesResponse.json();
 
         // 获取最近的提交
-        const commitsResponse = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}/commits?per_page=5`, { headers });
-        const commits = await commitsResponse.json();
+        let commits = [];
+        try {
+            const commitsResponse = await fetch(`${GITHUB_API_BASE}/repos/${cleanOwner}/${cleanRepo}/commits?per_page=5`, { headers });
+            if (commitsResponse.ok) {
+                commits = await commitsResponse.json();
+            } else {
+                console.warn(`无法获取仓库 ${cleanOwner}/${cleanRepo} 的提交信息: ${commitsResponse.status}`);
+            }
+        } catch (commitError) {
+            console.warn(`获取仓库 ${cleanOwner}/${cleanRepo} 提交信息时出错:`, commitError);
+        }
 
         // 获取README内容
         let readme = null;
         try {
-            const readmeResponse = await fetch(`${GITHUB_API_BASE}/repos/${owner}/${repo}/readme`, { headers });
-            const readmeData = await readmeResponse.json();
-            // 使用 decodeURIComponent 和 escape 来正确处理中文内容
-            readme = decodeURIComponent(escape(atob(readmeData.content)));
+            const readmeResponse = await fetch(`${GITHUB_API_BASE}/repos/${cleanOwner}/${cleanRepo}/readme`, { headers });
+            if (readmeResponse.ok) {
+                const readmeData = await readmeResponse.json();
+                // 使用 decodeURIComponent 和 escape 来正确处理中文内容
+                readme = decodeURIComponent(escape(atob(readmeData.content)));
+            }
         } catch (error) {
             console.log('No README found');
         }
@@ -1398,32 +2065,41 @@ function closeProjectModal() {
 // 添加切换活动显示的函数
 function toggleActivity(event) {
     event.preventDefault();
-    const hiddenActivities = document.querySelectorAll('.hidden-activity');
+    const hiddenItems = document.querySelectorAll('.hidden-activity-item');
     const button = event.currentTarget;
     
-    if (hiddenActivities.length > 0) {
-        hiddenActivities.forEach(activity => {
-            activity.classList.add('show');
-        });
-        button.innerHTML = `
-            Show less activity
-            <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                <path d="M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0Z"></path>
-            </svg>
-        `;
-    } else {
-        const allActivities = document.querySelectorAll('.activity-month');
-        allActivities.forEach((activity, index) => {
-            if (index > 0) {
-                activity.classList.remove('show');
-            }
-        });
-        button.innerHTML = `
-            Show more activity
-            <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
-                <path d="M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0Z"></path>
-            </svg>
-        `;
+    if (hiddenItems.length > 0) {
+        // 检查当前状态：如果第一个隐藏项目是隐藏的，说明当前是收起状态，需要展开
+        const firstHiddenItem = hiddenItems[0];
+        // 检查元素是否隐藏：通过style.display或CSS类
+        const isCurrentlyHidden = firstHiddenItem.style.display === 'none' || 
+                                 window.getComputedStyle(firstHiddenItem).display === 'none';
+        
+        if (isCurrentlyHidden) {
+            // 当前是收起状态，展开所有隐藏项目
+            hiddenItems.forEach(item => {
+                item.style.display = 'block';
+            });
+            
+            button.innerHTML = `
+                Show less activity
+                <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                    <path d="M3.22 10.53a.749.749 0 0 1 0-1.06l4.25-4.25a.749.749 0 0 1 1.06 0l4.25 4.25a.749.749 0 1 1-1.06 1.06L8 6.811 4.28 10.53a.749.749 0 0 1-1.06 0Z"></path>
+                </svg>
+            `;
+        } else {
+            // 当前是展开状态，收起所有隐藏项目
+            hiddenItems.forEach(item => {
+                item.style.display = 'none';
+            });
+            
+            button.innerHTML = `
+                Show more activity
+                <svg class="octicon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" width="16" height="16">
+                    <path d="M12.78 5.22a.749.749 0 0 1 0 1.06l-4.25 4.25a.749.749 0 0 1-1.06 0L3.22 6.28a.749.749 0 1 1 1.06-1.06L8 8.939l3.72-3.719a.749.749 0 0 1 1.06 0Z"></path>
+                </svg>
+            `;
+        }
     }
 }
 
@@ -1607,7 +2283,37 @@ function initializeTheme() {
 // 在 DOMContentLoaded 事件中初始化主题
 document.addEventListener('DOMContentLoaded', function() {
     initializeTheme();
+    
+    // 启动自动检查贡献数据更新
+    startContributionUpdateChecker();
 });
+
+// 添加启动贡献数据更新检查器的函数
+function startContributionUpdateChecker() {
+    // 每1分钟检查一次更新
+    setInterval(async () => {
+        // 只在页面可见时检查更新
+        if (!document.hidden) {
+            const needsUpdate = await checkContributionUpdates();
+            if (needsUpdate) {
+                console.log('检测到新活动，自动更新贡献数据');
+                await refreshContributionData();
+            }
+        }
+    }, 1 * 60 * 1000); // 1分钟
+    
+    // 监听页面可见性变化
+    document.addEventListener('visibilitychange', async () => {
+        if (!document.hidden) {
+            // 页面变为可见时检查更新
+            const needsUpdate = await checkContributionUpdates();
+            if (needsUpdate) {
+                console.log('页面重新可见，检测到新活动，自动更新贡献数据');
+                await refreshContributionData();
+            }
+        }
+    });
+}
 
 // 获取Memos数据的函数
 async function fetchMemosData() {
