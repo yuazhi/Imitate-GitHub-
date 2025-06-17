@@ -1154,12 +1154,14 @@ margin-left: auto; /* 这也会帮助选择框靠右 */
 
 .year-select {
     padding: 5px 8px;
+    height: 32px; /* 与刷新按钮保持一致的高度 */
     font-size: 14px;
     border: 1px solid var(--border-color);
     border-radius: 6px;
     background-color: var(--bg-secondary);
     color: var(--text-primary);
     cursor: pointer;
+    box-sizing: border-box; /* 确保padding和border包含在高度内 */
 }
 
 /* 添加暗色模式下年份选择器的样式 */
@@ -2977,8 +2979,8 @@ margin-left: auto; /* 保持靠右 */
     }
 
     .year-select {
-        width: auto;
-        min-width: 100px;
+        width: 100px;
+        height: 28px; /* 移动端与刷新按钮保持一致 */
     }
 }
 
@@ -5001,7 +5003,7 @@ margin-left: auto; /* 保持靠右 */
 
 .tip-content {
     background-color: var(--modal-bg);
-    border: 1px solid var(--modal-border);
+    border: 0px solid var(--modal-border);
     border-radius: 8px;
     padding: 12px 20px;
     display: flex;
@@ -5163,4 +5165,251 @@ margin-left: auto; /* 保持靠右 */
 
 [data-theme="dark"] .tip-content button:hover {
     background-color: var(--link-hover-color);
+}
+
+/* 隐藏活动项样式 */
+.hidden-activity-item {
+    display: none;
+}
+
+/* 显示更多按钮样式 */
+.show-more {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.show-more-button {
+    background-color: transparent;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 5px 16px;
+    font-size: 14px;
+    color: var(--text-primary);
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    transition: background-color 0.2s ease;
+}
+
+.show-more-button:hover {
+    background-color: var(--hover-bg);
+}
+
+.show-more-button svg {
+    margin-left: 4px;
+}
+
+/* 贡献数据刷新按钮和提示样式 */
+.contribution-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.refresh-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    padding: 0;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.refresh-button:hover {
+    background-color: var(--skill-bg);
+    border-color: var(--border-color);
+    transform: scale(1.05);
+}
+
+.refresh-button:active {
+    transform: scale(0.95);
+}
+
+.refresh-button:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+}
+
+.refresh-button:disabled:hover {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+    transform: none;
+}
+
+.refresh-button:disabled:hover svg {
+    transform: none;
+}
+
+.refresh-button svg {
+    transition: transform 0.3s ease;
+}
+
+.refresh-button:hover svg {
+    transform: rotate(180deg);
+}
+
+.refresh-button.loading svg {
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* 刷新提示消息样式 */
+.refresh-toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 10000;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    transform: translateX(100%);
+    opacity: 0;
+    transition: all 0.3s ease;
+    max-width: 300px;
+}
+
+.refresh-toast.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.refresh-toast.success {
+    border-left: 4px solid #2da44e;
+}
+
+.refresh-toast.error {
+    border-left: 4px solid #cf222e;
+}
+
+.toast-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-color);
+}
+
+.toast-icon {
+    flex-shrink: 0;
+}
+
+.refresh-toast.success .toast-icon {
+    color: #2da44e;
+}
+
+.refresh-toast.error .toast-icon {
+    color: #cf222e;
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .contribution-controls {
+        gap: 6px;
+    }
+    
+    .refresh-button {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .refresh-toast {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
+}
+
+/* 贡献图标题组样式优化 */
+.contribution-title-group {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.contribution-title-group h2 {
+    margin: 0;
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+/* 年份选择器样式优化 */
+.year-select-container {
+    position: relative;
+}
+
+.year-select {
+    padding: 4px 8px;
+    height: 32px; /* 与刷新按钮保持一致的高度 */
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    font-size: 14px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 4px center;
+    background-repeat: no-repeat;
+    background-size: 16px;
+    padding-right: 24px;
+    box-sizing: border-box; /* 确保padding和border包含在高度内 */
+}
+
+.year-select:hover {
+    border-color: var(--border-color);
+    background-color: var(--skill-bg);
+}
+
+.year-select:focus {
+    outline: none;
+    border-color: #0969da;
+    box-shadow: 0 0 0 3px rgba(9, 105, 218, 0.1);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .contribution-controls {
+        gap: 6px;
+    }
+    
+    .refresh-button {
+        width: 28px;
+        height: 28px;
+    }
+    
+    .year-select {
+        height: 28px; /* 移动端与刷新按钮保持一致 */
+    }
+    
+    .refresh-toast {
+        top: 10px;
+        right: 10px;
+        left: 10px;
+        max-width: none;
+    }
 }
