@@ -5537,3 +5537,33 @@ margin-left: auto; /* 保持靠右 */
     color: var(--text-secondary);
 }
 
+/* Fork 箭头样式 */
+.fork-arrow {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin: 0 4px;
+    font-weight: bold;
+}
+
+/* 暗色模式适配 */
+[data-theme="dark"] .commit-messages {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .branch-tag {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .commit-sha {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .fork-arrow {
+    color: var(--text-secondary);
+}
+
