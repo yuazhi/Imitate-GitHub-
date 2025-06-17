@@ -10,49 +10,39 @@ function normalizeLangName(name) {
         .replace(/\s+/g, '');
 }
 
-// 示例项目数据 - 请替换为您的实际项目数据
+// 示例项目数据 - 请根据实际情况修改
 const projectsData = [
     {
         name: "example-project",
         description: "这是一个示例项目",
         tags: ["JavaScript", "HTML", "CSS"],
-        stars: 10,
-        forks: 5
-    },
-    {
-        name: "another-project",
-        description: "另一个示例项目",
-        tags: ["Vue", "Node.js"],
-        stars: 25,
-        forks: 8
+        stars: 0,
+        forks: 0
     }
 ];
 
-// 在 projectsData 数组前添加正在进行的项目数据
+// 示例正在进行的项目数据
 const ongoingProject = {
-    name: "current-project",
-    description: "这是一个正在开发中的重要项目。",
-    tags: ["React", "TypeScript"],
-    progress: 65, // 进度百分比
-    stars: 15,
-    forks: 3
+    name: "example-ongoing-project",
+    description: "这是一个正在开发中的示例项目。",
+    tags: ["JavaScript", "HTML", "CSS"],
+    progress: 50, // 进度百分比
+    stars: 0,
+    forks: 0
 };
 
-// ==================== 配置区域 ====================
-// 请根据您的实际情况修改以下配置
-
-// GitHub API配置
-const GITHUB_USERNAME = 'your-github-username'; // 替换为您的GitHub用户名
+// GitHub API配置 - 请根据实际情况修改
+const GITHUB_USERNAME = 'your-username';
 const GITHUB_API_BASE = 'https://api.github.com';
-const GITHUB_TOKEN = ''; // 替换为您的GitHub Token（可选，用于提高API限制）
+const GITHUB_TOKEN = ''; // 请填入你的GitHub Token
 
-// Memos API配置（可选）
-const MEMOS_API_BASE = ''; // 替换为您的Memos API地址
-const MEMOS_TOKEN = ''; // 替换为您的Memos Token
+// Memos API配置 - 可选配置
+const MEMOS_API_BASE = '';
+const MEMOS_TOKEN = '';
 
-// 文章 API 配置（可选）
+// 文章 API 配置 - 可选配置
 const ARTICLES_API_CONFIG = {
-    URL: "", // 替换为您的文章API地址
+    URL: "",
     Method: "post",
     Headers: {
         "Accept": "application/json, text/plain, */*",
@@ -69,23 +59,7 @@ const ARTICLES_API_CONFIG = {
     Status: 200
 };
 
-// ==================== 配置区域结束 ====================
-
 async function fetchArticlesData() {
-    // 如果没有配置文章API，返回空数组
-    if (!ARTICLES_API_CONFIG.URL) {
-        console.log('文章API未配置，使用示例数据');
-        return [
-            {
-                id: 1,
-                title: "示例文章标题",
-                description: "这是一篇示例文章",
-                text: "这是示例文章的内容。您可以在这里添加您的实际文章内容。",
-                created_at: new Date().toISOString()
-            }
-        ];
-    }
-
     try {
         showSkeletonLoading();
         const response = await fetch(ARTICLES_API_CONFIG.URL, {
@@ -99,11 +73,11 @@ async function fetchArticlesData() {
         }
 
         const data = await response.json();
-        console.log("API 返回的原始数据:", data);
+        console.log("API 返回的原始数据:", data); // 添加日志
         hideSkeletonLoading();
         // 对文章数据进行排序，按 created_at 降序排列
         const sortedRows = data.rows.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-        return sortedRows;
+        return sortedRows; // 返回排序后的数据
     } catch (error) {
         console.error("Error fetching articles data:", error);
         hideSkeletonLoading();
@@ -111,19 +85,13 @@ async function fetchArticlesData() {
     }
 }
 
-// 示例友情链接数据 - 请替换为您的实际友链数据
+// 示例友情链接数据 - 请根据实际情况修改
 const friendsData = [
     {
-        name: "示例友链1",
-        url: "https://example1.com/",
-        description: "这是一个示例友链",
-        avatar: "https://example1.com/favicon.ico"
-    },
-    {
-        name: "示例友链2",
-        url: "https://example2.com/",
-        description: "另一个示例友链",
-        avatar: "https://example2.com/favicon.ico"
+        name: "示例博客",
+        url: "https://example.com/",
+        description: "这是一个示例友情链接",
+        avatar: "https://example.com/favicon.ico"
     }
 ];
 
@@ -154,15 +122,15 @@ async function renderFriends() {
                     </div>
                     <div class="site-info-item">
                         <span class="site-info-label">地址：</span>
-                        <span class="site-info-value"><a href="https://your-domain.com/" target="_blank">https://your-domain.com/</a></span>
+                        <span class="site-info-value"><a href="https://example.com/" target="_blank">https://example.com/</a></span>
                     </div>
                     <div class="site-info-item">
                         <span class="site-info-label">图标：</span>
-                        <span class="site-info-value"><a href="https://your-domain.com/favicon.ico" target="_blank">点击查看</a></span>
+                        <span class="site-info-value"><a href="https://via.placeholder.com/150x150/007acc/ffffff?text=图标" target="_blank">点击查看</a></span>
                     </div>
                     <div class="site-info-item">
                         <span class="site-info-label">简介：</span>
-                        <span class="site-info-value">这是一个个人网站模板</span>
+                        <span class="site-info-value">基于纯前端技术构建的个人网站模板</span>
                     </div>
                     <div class="site-info-item">
                         <span class="site-info-label">提交邮箱：</span>
@@ -1551,13 +1519,13 @@ async function renderProjects() {
 // 修改微信二维码弹窗功能
 function showWechat(event) {
     event.preventDefault();
-    showQRCode('微信', '#', '扫码添加微信');
+    showQRCode('微信', 'https://cdn.motsuni.cn/wechat.png', '扫码添加微信');
 }
 
 // 添加 QQ 二维码弹窗功能
 function showQQ(event) {
     event.preventDefault();
-    showQRCode('QQ', '#', '扫码添加QQ');
+    showQRCode('QQ', 'https://cdn.motsuni.cn//5F0F254804122675E05D936AC8081975.png', '扫码添加QQ');
 }
 
 // 通用的二维码弹窗显示函数
@@ -2573,7 +2541,7 @@ async function renderArticles() {
         // 只渲染前五个文章
         const initialArticles = articles.slice(0, 5);
         initialArticles.forEach(article => {
-            const descriptionText = article.description || ''; // 移除默认值 'yuazhi'
+            const descriptionText = article.description || ''; // 文章描述
             // 从文章内容中提取摘要
             const content = article.text || article.content || '';
             const summary = content.replace(/<[^>]+>/g, '').slice(0, 100) + (content.length > 100 ? '...' : '');
