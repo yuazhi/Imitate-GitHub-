@@ -94,16 +94,18 @@ body {
     flex: 1;
     display: flex;
     flex-direction: column;
-    max-width: 1280px; /* Adjusted from 1012px for a wider layout on desktop */
+    width: 100%;
+    max-width: 1440px; /* 固定最大宽度 */
     margin: 0 auto;
-    padding: 0 1rem;
+    padding: 0 2rem;
 }
 
 .profile-section {
     display: grid;
-    grid-template-columns: 256px minmax(0, 992px); /* Adjusted to utilize full container width */
-    gap: 2rem;
+    grid-template-columns: 300px minmax(0, 1fr); /* 固定左侧宽度 */
+    gap: 3rem;
     margin: 2rem 0;
+    width: 100%; /* 确保宽度100% */
 }
 
 .profile-card {
@@ -156,15 +158,19 @@ body {
 }
 
 .tab-container {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-color);
+    margin-bottom: 24px;
+    padding: 0;
     display: flex;
     align-items: center;
     border-bottom: 1px solid var(--border-color);
-    margin-bottom: 24px;
-    padding: 0 16px;
-    background: var(--header-bg);
     overflow-x: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .tab-container::-webkit-scrollbar {
@@ -172,24 +178,50 @@ body {
 }
 
 .tab {
-    display: inline-flex;
-    align-items: center;
-    padding: 8px 16px;
+    padding: 16px 24px;
     font-size: 14px;
-    font-weight: 500;
-    color: var(--text-color);
+    line-height: 1.5;
+    color: var(--text-secondary);
     text-decoration: none;
     border-bottom: 2px solid transparent;
-    margin-right: 8px;
+    margin-right: 0;
+    white-space: nowrap;
+    position: relative;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.tab::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #F78166;
+    transition: width 0.2s ease;
 }
 
 .tab:hover {
     border-bottom-color: transparent;
+    color: var(--text-color);
+    background-color: var(--bg-secondary);
+}
+
+.tab:hover::after {
+    width: 0;
 }
 
 .tab.active {
-    border-bottom-color: #fd8c73;
+    border-bottom-color: #F78166;
     font-weight: 600;
+    color: var(--text-color);
+    background-color: transparent;
+}
+
+.tab.active::after {
+    width: 100%;
 }
 
 .repo-card {
@@ -199,8 +231,111 @@ body {
     padding: 16px;
     margin-bottom: 16px;
     position: relative;
-    cursor: pointer;
-    transition: none;
+    transition: border-color 0.2s ease;
+}
+
+.repo-card:hover {
+    /* 移除悬停边框高亮 */
+    border-color: var(--border-color);
+}
+
+.repo-title {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--link-color);
+}
+
+.repo-title:hover {
+    color: var(--hover-color);
+    text-decoration: none;
+}
+
+.repo-description {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+.repo-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.language-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.language-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.repo-stats {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-top: 16px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.repo-stat {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.repo-stat svg {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.repo-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 2px 7px;
+    font-size: 12px;
+    font-weight: 500;
+    line-height: 18px;
+    border-radius: 2em;
+    background-color: var(--bg-secondary);
+    color: var(--text-color);
+    margin-right: 4px;
+    margin-bottom: 4px;
+}
+
+[data-theme="dark"] .repo-card {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .repo-card:hover {
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .repo-title {
+    color: var(--link-color);
+}
+
+[data-theme="dark"] .repo-title:hover {
+    color: var(--hover-color);
+}
+
+[data-theme="dark"] .repo-tag {
+    background-color: var(--bg-secondary);
+    color: var(--text-color);
 }
 
 .repo-card::after {
@@ -270,6 +405,19 @@ body {
 .language-PHP { color: #4F5D95; }
 .language-Vue { color: #41b883; }
 .language-Go { color: #00ADD8; }
+.language-Rust { color: #dea584; }
+.language-Swift { color: #ffac45; }
+.language-Kotlin { color: #F18E33; }
+.language-C { color: #555555; }
+.language-CPP { color: #f34b7d; }
+.language-CSharp { color: #178600; }
+.language-Vue { color: #41b883; }
+.language-React { color: #61dafb; }
+.language-Node\.js { color: #339933; }
+.language-Git { color: #F05032; }
+.language-MongoDB { color: #13AA52; }
+.language-MySQL { color: #4479A1; }
+.language-Linux { color: #FCC624; }
 
 .repo-stats {
     display: flex;
@@ -520,9 +668,17 @@ body {
     .repo-card::after {
         display: none; /* 在移动端隐藏提示文字 */
     }
+    
+    /* 调整tab-container位置，让它往上移动 */
+    .tab-container {
+        margin-top: -1.5rem;
+        margin-bottom: 16px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0;
+    }
 }
 
-/* 小屏手机 */
 @media (max-width: 480px) {
     .container {
         padding: 1rem 1rem;
@@ -611,9 +767,17 @@ body {
         width: 12px;
         height: 12px;
     }
+    
+    /* 调整tab-container位置，让它往上移动 */
+    .tab-container {
+        margin-top: -1.5rem;
+        margin-bottom: 16px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0;
+    }
 }
 
-/* 超窄屏手机 */
 @media (max-width: 360px) {
     .container {
         padding: 0.75rem 0.75rem;
@@ -670,6 +834,15 @@ body {
         font-size: 12px;
         gap: 0.35rem;
     }
+    
+    /* 调整tab-container位置，让它往上移动 */
+    .tab-container {
+        margin-top: -1.5rem;
+        margin-bottom: 16px;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding: 0;
+    }
 }
 
 .repo-stats {
@@ -691,8 +864,9 @@ body {
 }
 
 .content-area {
-    flex: 1;
-    min-height: 200px;
+    width: 100%;
+    min-width: 0;
+    position: relative;
 }
 
 .pinned-project {
@@ -704,11 +878,44 @@ body {
     border: 1px solid var(--border-color); /* 亮色模式下的边框 */
     box-shadow: none; /* 移除阴影 */
 }
-
+@media (max-width: 768px) {
+    .repo-header-row {
+      flex-wrap: nowrap;
+    }
+    .repo-title {
+      flex: 1 1 auto;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .repo-created {
+      flex-shrink: 0;
+      margin-left: 8px;
+      white-space: nowrap;
+      margin-top: 5px;
+    }
+  
+  /* 移动端最新项目卡片中的创建时间样式 */
+  .pinned-project .repo-created {
+    font-size: 10px;
+    padding: 1px 6px;
+    margin-left: 4px;
+    margin-top: -2px !important; /* 减小负边距，让其位置往下移动 */
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* 移动端普通项目卡片中的创建时间样式 */
+  .repo-card .repo-created {
+    font-size: 11px;
+    margin-top: 5px;
+  }
+}
 .pinned-project .repo-title {
     font-size: 16px;
     font-weight: 600;
-    color: var(--text-primary);
+    color: #0969da;
     margin-bottom: 8px;
     transition: color 0.3s ease;
 }
@@ -766,7 +973,7 @@ body {
 }
 
 [data-theme="dark"] .pinned-project .repo-title {
-    color: var(--text-primary-dark);
+    color: #2f81f7;
 }
 
 [data-theme="dark"] .pinned-project .repo-description {
@@ -801,6 +1008,7 @@ body {
 
     .pinned-project .repo-title {
         font-size: 15px;
+        color: #0969da;
     }
 
     .pinned-project .repo-description {
@@ -846,6 +1054,7 @@ body {
 
     .pinned-project .repo-title {
         font-size: 14px;
+        color: #0969da;
     }
 
     .pinned-project .repo-description {
@@ -1059,7 +1268,7 @@ body {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) scale(0);
-    background: white;
+    background: var(--card-bg);
     padding: 2rem;
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
@@ -1067,7 +1276,7 @@ body {
     text-align: center;
     transition: transform 0.3s ease;
     width: 90%;
-    max-width: 360px;
+    max-width: 400px;
 }
 
 .wechat-popup.show {
@@ -1077,6 +1286,8 @@ body {
 .wechat-popup img {
     width: 100%;
     height: auto;
+    max-height: 70vh;
+    object-fit: contain;
     margin-bottom: 1.5rem;
     border-radius: 8px;
 }
@@ -1708,15 +1919,19 @@ margin-left: auto; /* 保持靠右 */
 }
 
 .tab-container {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: var(--bg-color);
+    margin-bottom: 24px;
+    padding: 0;
     display: flex;
     align-items: center;
     border-bottom: 1px solid var(--border-color);
-    margin-bottom: 24px;
-    padding: 0 16px;
-    background: var(--header-bg);
     overflow-x: auto;
-    scrollbar-width: none; /* Firefox */
-    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
 }
 
 .tab-container::-webkit-scrollbar {
@@ -1724,28 +1939,50 @@ margin-left: auto; /* 保持靠右 */
 }
 
 .tab {
-    padding: 8px 16px;
+    padding: 16px 24px;
     font-size: 14px;
-    line-height: 30px;
-    color: var(--text-color);
+    line-height: 1.5;
+    color: var(--text-secondary);
     text-decoration: none;
     border-bottom: 2px solid transparent;
-    margin-right: 8px;
+    margin-right: 0;
     white-space: nowrap;
+    position: relative;
+    transition: all 0.2s ease;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.tab::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background-color: #F78166;
+    transition: width 0.2s ease;
 }
 
 .tab:hover {
     border-bottom-color: transparent;
+    color: var(--text-color);
+    background-color: var(--bg-secondary);
+}
+
+.tab:hover::after {
+    width: 0;
 }
 
 .tab.active {
-    border-bottom-color: #fd8c73;
+    border-bottom-color: #F78166;
     font-weight: 600;
+    color: var(--text-color);
+    background-color: transparent;
 }
 
-.tab svg {
-    margin-right: 8px;
-    fill: currentColor;
+.tab.active::after {
+    width: 100%;
 }
 
 .theme-switch {
@@ -1814,6 +2051,14 @@ margin-left: auto; /* 保持靠右 */
     .tab-container {
         overflow-x: auto;
         -webkit-overflow-scrolling: touch;
+        padding: 0;
+    }
+    
+    .tab {
+        padding: 12px 16px;
+        font-size: 14px;
+        min-width: auto;
+        flex-shrink: 0;
     }
 }
 
@@ -1833,6 +2078,15 @@ margin-left: auto; /* 保持靠右 */
     
     .repo-stats {
         flex-wrap: wrap;
+    }
+    
+    .tab-container {
+        padding: 0;
+    }
+    
+    .tab {
+        padding: 10px 12px;
+        font-size: 13px;
     }
 }
 
@@ -3680,6 +3934,7 @@ margin-left: auto; /* 保持靠右 */
 .repo-created {
   font-size: 12px;
   color: var(--text-secondary);
+  margin-top: -5px;
 }
 .repo-description {
   color: var(--text-color);
@@ -4941,6 +5196,7 @@ margin-left: auto; /* 保持靠右 */
     background-color: var(--modal-bg);
     border-color: var(--border-color);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      border-radius: 8px; /* 添加圆角 */
 }
 
 @media (max-width: 768px) {
@@ -5144,6 +5400,7 @@ margin-left: auto; /* 保持靠右 */
     color: var(--text-color);
     border: 1px solid var(--border-color);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      border-radius: 8px; /* 添加圆角 */
 }
 
 /* 暗黑模式下的项目提示样式 */
@@ -5151,6 +5408,7 @@ margin-left: auto; /* 保持靠右 */
     background-color: var(--card-bg);
     border: 1px solid var(--border-color);
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      border-radius: 8px; /* 添加圆角 */
 }
 
 [data-theme="dark"] .tip-content {
@@ -5158,13 +5416,14 @@ margin-left: auto; /* 保持靠右 */
 }
 
 [data-theme="dark"] .tip-content button {
-    background-color: var(--hover-color);
-    color: #ffffff;
+    background-color: transparent;
+    color: var(--text-color);
     border: none;
 }
 
 [data-theme="dark"] .tip-content button:hover {
-    background-color: var(--link-hover-color);
+    background-color: transparent;
+    color: var(--text-color);
 }
 
 /* 隐藏活动项样式 */
@@ -5412,4 +5671,953 @@ margin-left: auto; /* 保持靠右 */
         left: 10px;
         max-width: none;
     }
+}
+
+/* 提交信息样式 */
+.commit-messages {
+    margin-top: 8px;
+    padding: 8px;
+    background-color: var(--bg-secondary);
+    border-radius: 6px;
+    border: 1px solid var(--border-color);
+}
+
+.commit-message-item {
+    margin-bottom: 4px;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+
+.commit-message-item:last-child {
+    margin-bottom: 0;
+}
+
+.commit-message-text {
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+    word-break: break-word;
+}
+
+/* 分支标签样式 */
+.branch-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+.branch-tag svg {
+    width: 12px;
+    height: 12px;
+    color: var(--text-secondary);
+}
+
+/* Commit SHA 样式 */
+.commit-sha {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 6px;
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+}
+
+.commit-sha svg {
+    width: 12px;
+    height: 12px;
+    color: var(--text-secondary);
+}
+
+/* 暗色模式适配 */
+[data-theme="dark"] .commit-messages {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .branch-tag {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .commit-sha {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+/* 活动项增强样式 */
+.activity-item {
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.activity-item:last-child {
+    border-bottom: none;
+}
+
+.activity-details {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+}
+
+.repo-link {
+    color: var(--link-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.activity-date {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+/* 暗色模式适配 */
+[data-theme="dark"] .commit-messages {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .branch-tag {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+/* Fork 箭头样式 */
+.fork-arrow {
+    color: var(--text-secondary);
+    font-size: 12px;
+    margin: 0 4px;
+    font-weight: bold;
+}
+
+/* 暗色模式适配 */
+[data-theme="dark"] .commit-messages {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .branch-tag {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .commit-sha {
+    background-color: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .fork-arrow {
+    color: var(--text-secondary);
+}
+
+[data-theme="dark"] .fork-arrow {
+    color: #7d8590;
+}
+
+/* GitHub Statistics Section */
+.github-stats-section {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.stats-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.stats-title::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(135deg, #fd8c73, #f97316);
+    border-radius: 2px;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.github-stats-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    display: block;
+    margin: 0 auto;
+}
+
+[data-theme="dark"] .github-stats-section {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .github-stats-section {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+    
+    .stats-title {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .github-stats-section {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .stats-title {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+    
+    .github-stats-image {
+        border-radius: 4px;
+    }
+}
+
+/* GitHub Activity Graph Section */
+.github-activity-section {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 24px;
+    margin-bottom: 24px;
+}
+
+.activity-title {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.activity-title::before {
+    content: '';
+    width: 4px;
+    height: 20px;
+    background: linear-gradient(135deg, #9e4c98, #ffcfe9);
+    border-radius: 2px;
+}
+
+.activity-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.github-activity-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 6px;
+    display: block;
+    margin: 0 auto;
+}
+
+[data-theme="dark"] .github-activity-section {
+    background-color: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+@media (max-width: 768px) {
+    .github-activity-section {
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+    
+    .activity-title {
+        font-size: 18px;
+        margin-bottom: 12px;
+    }
+}
+
+@media (max-width: 480px) {
+    .github-activity-section {
+        padding: 12px;
+        margin-bottom: 12px;
+    }
+    
+    .activity-title {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+    
+    .github-activity-image {
+        border-radius: 4px;
+    }
+}
+/* 通用样式 */
+.repo-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+.repo-title {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.repo-created {
+  flex-shrink: 0;
+  margin-left: 8px;
+  white-space: nowrap;
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+  .repo-header-row {
+    flex-wrap: nowrap;
+  }
+  .repo-title {
+    flex: 1 1 auto;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .repo-created {
+    flex-shrink: 0;
+    margin-left: 8px;
+    white-space: nowrap;
+    margin-top: 5px;
+  }
+  
+  /* 移动端最新项目卡片中的创建时间样式 */
+  .pinned-project .repo-created {
+    font-size: 10px;
+    padding: 1px 6px;
+    margin-left: 4px;
+    margin-top: -2px !important; /* 减小负边距，让其位置往下移动 */
+    position: relative;
+    z-index: 1;
+  }
+  
+  /* 移动端普通项目卡片中的创建时间样式 */
+  .repo-card .repo-created {
+    font-size: 11px;
+    margin-top: 5px;
+  }
+}
+
+/* 最新项目卡片中的创建时间样式 */
+.pinned-project .repo-created {
+  font-size: 11px;
+  color: var(--text-secondary);
+  background-color: var(--bg-secondary);
+  padding: 2px 8px;
+  border-radius: 12px;
+  margin-top: -5px; /* 添加负边距，让创建时间在电脑端往上移动 */
+  display: inline-flex;
+  align-items: center;
+  position: relative; /* 添加相对定位 */
+  top: -5px; /* 使用top属性进一步微调位置 */
+}
+
+/* 普通项目卡片中的创建时间样式 */
+.repo-card .repo-created {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: -0px;
+}
+
+/* 暗色模式下的样式调整 */
+[data-theme="dark"] .pinned-project .repo-created {
+  background-color: var(--skill-bg);
+  color: var(--text-secondary);
+}
+
+/* 手机端最新项目卡片中的创建时间样式 - 单独定义以提高优先级 */
+@media (max-width: 768px) {
+  body .pinned-project .repo-created {
+    font-size: 10px !important;
+    padding: 1px 6px !important;
+    margin-left: 4px !important;
+    margin-top: 5px !important; /* 改为0，让它位置更低 */
+    position: relative !important;
+    z-index: 1 !important;
+  }
+}
+
+/* GitHub Activity Graph 折线图样式 */
+.activity-graph-container {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 2rem; /* 增加内边距 */
+    margin-bottom: 1.5rem;
+}
+
+.activity-graph-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+}
+
+.activity-graph-header h3 {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin: 0;
+}
+
+.graph-stats {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+}
+
+.total-commits,
+.avg-commits {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+}
+
+.chart-wrapper {
+    position: relative;
+    height: 300px; /* 增加图表高度 */
+    width: 100%;
+    margin-top: 1rem;
+}
+
+#activityChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+/* 暗色模式样式 */
+[data-theme="dark"] .activity-graph-container {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .activity-graph-header h3 {
+    color: var(--text-color);
+}
+
+[data-theme="dark"] .graph-stats {
+    color: var(--text-secondary);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .activity-graph-container {
+        padding: 1rem;
+    }
+    
+    .activity-graph-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .graph-stats {
+        gap: 0.75rem;
+    }
+    
+    .chart-wrapper {
+        height: 250px;
+    }
+}
+@media (min-width: 769px) {
+    .project-modal .section-title {
+      margin-top: 15px;
+    }
+  }
+@media (max-width: 480px) {
+    .activity-graph-container {
+        padding: 0.75rem;
+    }
+    
+    .activity-graph-header h3 {
+        font-size: 1rem;
+    }
+    
+    .graph-stats {
+        font-size: 0.8rem;
+        gap: 0.5rem;
+    }
+    
+    .chart-wrapper {
+        height: 200px;
+    }
+}
+
+/* 更新日志样式 */
+.changelog-container {
+    max-width: 100%;
+    margin: 0 auto;
+}
+
+.changelog-header {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+.changelog-header h2 {
+    font-size: 2rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.changelog-header p {
+    color: var(--text-secondary);
+    font-size: 1rem;
+}
+
+.changelog-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.changelog-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    transition: all 0.2s ease;
+}
+
+.changelog-item:hover {
+    border-color: var(--hover-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.changelog-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.changelog-version {
+    display: flex;
+    align-items: center;
+}
+
+.version-tag {
+    background: var(--hover-color);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+}
+
+.type-tag {
+    margin-left: 0.5rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    font-weight: 500;
+    text-transform: capitalize;
+}
+
+.type-feature {
+    background: #28a745;
+    color: white;
+}
+
+.type-fix {
+    background: #dc3545;
+    color: white;
+}
+
+.type-improvement {
+    background: #17a2b8;
+    color: white;
+}
+
+.type-default {
+    background: var(--text-secondary);
+    color: white;
+}
+
+.changelog-date {
+    color: var(--text-secondary);
+    font-size: 0.875rem;
+}
+
+.changelog-content {
+    margin-bottom: 1rem;
+}
+
+.changelog-title {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0.75rem;
+}
+
+.changelog-description {
+    color: var(--text-color);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.changelog-changes {
+    background: var(--bg-secondary);
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    margin-top: 1rem;
+}
+
+.changelog-changes h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text-color);
+    margin-bottom: 0.5rem;
+}
+
+.changelog-changes ul {
+    margin: 0;
+    padding-left: 1.5rem;
+}
+
+.changelog-changes li {
+    color: var(--text-color);
+    margin-bottom: 0.25rem;
+}
+
+.changelog-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.changelog-tag {
+    background: var(--bg-secondary);
+    color: var(--text-secondary);
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    font-size: 0.75rem;
+    border: 1px solid var(--border-color);
+}
+
+/* 暗色模式样式 */
+[data-theme="dark"] .changelog-item {
+    background: var(--card-bg);
+    border-color: var(--border-color);
+}
+
+[data-theme="dark"] .changelog-item:hover {
+    border-color: var(--hover-color);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] .changelog-changes {
+    background: var(--bg-secondary);
+}
+
+[data-theme="dark"] .changelog-tag {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    color: var(--text-secondary);
+}
+
+/* 响应式设计 */
+@media (max-width: 768px) {
+    .changelog-container {
+        padding: 0 1rem;
+    }
+    
+    .changelog-header h2 {
+        font-size: 1.75rem;
+    }
+    
+    .changelog-item {
+        padding: 1rem;
+    }
+    
+    .changelog-header-row {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .changelog-title {
+        font-size: 1.125rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .changelog-header h2 {
+        font-size: 1.5rem;
+    }
+    
+    .changelog-item {
+        padding: 0.75rem;
+    }
+    
+    .changelog-title {
+        font-size: 1rem;
+    }
+    
+    .changelog-tags {
+        gap: 0.25rem;
+    }
+    
+    .changelog-tag {
+        font-size: 0.7rem;
+        padding: 0.2rem 0.4rem;
+    }
+}
+.pinned-project .repo-title {
+    font-size: 1.25rem !important;
+    font-weight: 600;
+    color: var(--hover-color);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+}
+
+/* 手机端适配 */
+@media (max-width: 640px) {
+    .pinned-project .repo-title {
+        font-size: 1.1rem !important;
+        margin-bottom: 0.4rem;
+        line-height: 1.35;
+    }
+}
+
+/* 更小屏幕适配 */
+@media (max-width: 480px) {
+    .pinned-project .repo-title {
+        font-size: 1.2rem !important;
+        margin: 0.1rem 0 0.3rem; /* 增大上边距 */
+        line-height: 1.3;
+    }
+}
+.repo-tag.version-tag {
+    background: #0969da;
+    color: white;
+    font-weight: 600;
+}
+
+.repo-tag.type-tag {
+    font-weight: 600;
+    text-transform: capitalize;
+}
+
+.repo-tag.type-feature {
+    background: #28a745;
+    color: white;
+}
+
+.repo-tag.type-fix {
+    background: #dc3545;
+    color: white;
+}
+
+.repo-tag.type-improvement {
+    background: #17a2b8;
+    color: white;
+}
+
+.repo-tag.type-default {
+    background: var(--text-secondary);
+    color: white;
+}
+
+/* ... existing code ... */
+.load-more-button:hover {
+    background-color: var(--button-hover-bg);
+    border-color: var(--button-hover-border);
+}
+
+/* Changelog Styles */
+.changelog-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.changelog-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.changelog-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--text-link);
+    margin: 0;
+}
+
+.changelog-date {
+    font-size: 13px;
+    color: var(--text-secondary);
+}
+
+.changelog-description {
+    font-size: 14px;
+    color: var(--text-color);
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.changelog-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.changelog-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    border-radius: 2em;
+    border: 1px solid var(--border-color);
+    background-color: var(--tag-bg);
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.changelog-tag.version-tag {
+    color: var(--text-link);
+    border-color: var(--tag-version-border);
+    background-color: var(--tag-version-bg);
+}
+
+.changelog-tag.type-feature {
+    color: var(--tag-feature-text);
+    border-color: var(--tag-feature-border);
+    background-color: var(--tag-feature-bg);
+}
+
+.changelog-tag.type-fix {
+    color: var(--tag-fix-text);
+    border-color: var(--tag-fix-border);
+    background-color: var(--tag-fix-bg);
+}
+
+.changelog-tag.type-improvement {
+    color: var(--tag-improvement-text);
+    border-color: var(--tag-improvement-border);
+    background-color: var(--tag-improvement-bg);
+}
+
+.changelog-description {
+    font-size: 14px;
+    color: var(--text-color);
+    margin-bottom: 12px;
+    line-height: 1.6;
+}
+
+.changelog-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 8px; /* row-gap column-gap */
+    padding-top: 12px;
+    margin-top: 12px;
+    border-top: 1px solid var(--border-color);
+}
+
+.changelog-tag {
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+    font-size: 13px;
+    font-weight: 400;
+    border-radius: 0;
+    border: none;
+    background-color: transparent;
+    color: var(--text-secondary);
+    white-space: nowrap;
+}
+
+.changelog-tag:not(:last-child)::after {
+    content: "·";
+    font-weight: bold;
+    margin-left: 8px;
+    color: var(--text-secondary);
+}
+
+.changelog-tag.version-tag {
+    color: var(--text-link);
+    font-weight: 500;
+    background: none;
+    border: none;
+}
+
+.changelog-tag.type-feature {
+    color: var(--tag-feature-text);
+    background: none;
+    border: none;
+}
+
+.changelog-tag.type-fix {
+    color: var(--tag-fix-text);
+    background: none;
+    border: none;
+}
+
+.changelog-tag.type-improvement {
+    color: var(--tag-improvement-text);
+    background: none;
+    border: none;
+}
+
+.changelog-tag:not(:last-child)::after {
+    content: "·";
+    font-weight: bold;
+    margin-left: 8px;
+    color: var(--text-secondary);
+}
+
+.changelog-tag.version-tag::after {
+    content: none;
+}
+
+.changelog-tag.version-tag {
+    color: var(--text-link);
+    font-weight: 500;
 }
